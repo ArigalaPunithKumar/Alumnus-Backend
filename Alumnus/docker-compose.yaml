@@ -1,0 +1,30 @@
+services:
+  # MongoDB Service
+  mongo:
+    image: mongo
+    container_name: alumnus-mongo-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - springnet
+
+  # Spring Boot Backend Service
+  backend:
+    build: .
+    container_name: alumnus-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/alumni_db
+    networks:
+      - springnet
+
+volumes:
+  mongo_data:
+
+networks:
+  springnet:
